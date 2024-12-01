@@ -3,8 +3,8 @@ package com.icesi.client.adapters;
 import com.zeroc.Ice.Communicator;
 import com.zeroc.Ice.ObjectAdapter;
 import com.zeroc.Ice.ObjectPrx;
-import ClientIce.PrinterPrx;
 import ClientIce.CallbackPrx;
+import ClientIce.PrinterPrx;
 
 public class ClientPrinterAdapter {
     private final PrinterPrx service;
