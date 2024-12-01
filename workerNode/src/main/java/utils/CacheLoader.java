@@ -10,14 +10,13 @@ import java.util.Map;
 public class CacheLoader {
 
     private Map<Integer, String> cache;
-    private String cacheFile;
 
-    public CacheLoader() {
-        cacheFile = "cache.txt";
+    public CacheLoader() throws IOException {
         cache = new HashMap<>();
+        loadCache("db_cache.txt");
     }
 
-    public void loadCache() throws IOException {
+    public void loadCache(String cacheFile) throws IOException {
         InputStream is = getClass().getClassLoader().getResourceAsStream(cacheFile);
         if (is == null) {
             throw new IOException("Archivo de caché no encontrado: " + cacheFile);
