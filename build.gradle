@@ -23,15 +23,15 @@
         implementation 'org.postgresql:postgresql:42.6.0'
         implementation 'org.slf4j:slf4j-simple:1.7.30'
     }
-
-    slice {
-        iceHome = '/opt/homebrew/Cellar/ice/3.7.10'
-        java {
-            files = [
-                // file('../Printer.ice')
-            ]
-        }
-    }
+     slice {
+         iceHome = 'C:/Program Files/ZeroC/Ice-3.7.10'
+         java {
+             files = [
+                     // file('../Printer.ice')
+                     file('../ice/Client.ice')
+             ]
+         }
+     }
 
     jar {
         manifest {

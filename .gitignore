@@ -34,3 +34,6 @@ build
 
 # VS Code files
 .vscode/
+
+# IntelliJ IDEA files
+.idea/
