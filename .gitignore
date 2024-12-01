@@ -37,3 +37,6 @@ build
 
 # IntelliJ IDEA files
 .idea/
+
+# Gradle files
+gradle.properties
