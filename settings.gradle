@@ -11,3 +11,4 @@ rootProject.name = 'voting-system'
 
 include 'workerNode'
 include 'client'
+include 'server'

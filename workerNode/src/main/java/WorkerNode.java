@@ -4,7 +4,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import database.DatabaseConfig;
-import database.DatabaseQueryManager;
+import services.QueryService;
 import utils.CacheLoader;
 import utils.PrimeFactorizer;
 
@@ -27,7 +27,7 @@ public class WorkerNode {
         }
 
         if (dbConnection != null && cacheLoader != null && primeFactorizer != null) {
-            DatabaseQueryManager queryManager = new DatabaseQueryManager(dbConnection, cacheLoader, primeFactorizer);
+            QueryService queryManager = new QueryService(dbConnection, cacheLoader, primeFactorizer);
             List<Integer> citizenIds = List.of(603308456, 620074463, 951646451, 421554480, 876515646,
                     482220811, 323290590, 76325522, 757113463, 601107656);
             queryManager.queryWithCache(citizenIds);
