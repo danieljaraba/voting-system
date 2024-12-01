@@ -9,6 +9,8 @@
     id 'com.zeroc.gradle.ice-builder.slice' version '1.4.7' apply false
  }
 
+def isWindows = System.getProperty('os.name').toLowerCase().contains('win')
+
  subprojects {
     apply plugin: 'java'
     apply plugin: 'com.zeroc.gradle.ice-builder.slice'
@@ -25,7 +27,7 @@
     }
      slice {
          //iceHome = 'C:/Program Files/ZeroC/Ice-3.7.10'
-         iceHome = '/opt/homebrew/Cellar/ice/3.7.10'
+         iceHome = isWindows ? 'C:/Program Files/ZeroC/Ice-3.7.10' : '/opt/homebrew/Cellar/ice/3.7.10'
          java {
              files = [
                      // file('../Printer.ice')
