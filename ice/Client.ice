@@ -12,16 +12,16 @@ module ClientIce
         ResponseList values;
     }
 
-    interface Callback
+    interface ClientCallback
     {
         void sendIndividualResponse(IndividualResponse r);
         void sendMultipleResponse(MultipleResponse r);
     }
 
-    interface Printer
+    interface ClientResolver
     {
-        void sendId(string id, Callback* client);
-        void sendFile(ResponseList list, Callback* client);
-        void setThreadNumber(int threadCount, Callback* client);
+        void sendId(string id, ClientCallback* client);
+        void sendFile(ResponseList list, ClientCallback* client);
+        void setThreadNumber(int threadCount, ClientCallback* client);
     }
 }

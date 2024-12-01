@@ -28,6 +28,7 @@ public class PoolWorker extends Thread {
                 task.run();
             } catch (RuntimeException e) {
                 System.out.println("Thread pool encountered an error while executing a task.");
+                e.printStackTrace();
             }
         }
     }

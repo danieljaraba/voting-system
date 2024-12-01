@@ -1,11 +1,11 @@
-package com.icesi.client.runners;
+package runners;
 
-import ClientIce.CallbackPrx;
-import com.icesi.client.config.ClientConfig;
-import com.icesi.client.adapters.ClientPrinterAdapter;
-import com.icesi.client.ui.ClientInterface;
-import com.icesi.client.utils.ClientUtils;
-import com.icesi.client.utils.InputParser;
+import ClientIce.ClientCallbackPrx;
+import config.ClientConfig;
+import adapters.ClientPrinterAdapter;
+import ui.ClientInterface;
+import utils.ClientUtils;
+import utils.InputParser;
 import com.zeroc.Ice.Communicator;
 import com.zeroc.Ice.ObjectAdapter;
 
@@ -21,11 +21,11 @@ public class ClientRunner {
         List<String> extraArgs = new ArrayList<>();
 
         try (Communicator communicator = ClientConfig.initializeCommunicator(args, "config.client", extraArgs)) {
-            ObjectAdapter adapter = ClientConfig.createObjectAdapter(communicator, "Callback");
+            ObjectAdapter adapter = ClientConfig.createObjectAdapter(communicator, "ClientCallback");
             ClientPrinterAdapter serviceManager = new ClientPrinterAdapter(communicator);
 
             String username = ClientInterface.promptUsername();
-            CallbackPrx callbackPrx = serviceManager.initializeCallback(adapter);
+            ClientCallbackPrx callbackPrx = serviceManager.initializeCallback(adapter);
 
             processInputs(serviceManager, callbackPrx, username);
 
@@ -36,7 +36,7 @@ public class ClientRunner {
         }
     }
 
-    private void processInputs(ClientPrinterAdapter serviceManager, CallbackPrx callbackPrx, String username) {
+    private void processInputs(ClientPrinterAdapter serviceManager, ClientCallbackPrx callbackPrx, String username) {
         String input;
         do {
             input = ClientInterface.promptInput();
@@ -46,7 +46,8 @@ public class ClientRunner {
         } while (!"exit".equalsIgnoreCase(input));
     }
 
-    private void processInput(String input, ClientPrinterAdapter serviceManager, CallbackPrx callbackPrx, String username) {
+    private void processInput(String input, ClientPrinterAdapter serviceManager, ClientCallbackPrx callbackPrx,
+            String username) {
         try {
             if (InputParser.isId(input)) {
                 serviceManager.sendId(input, callbackPrx);

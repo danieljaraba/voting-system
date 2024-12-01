@@ -1,4 +1,4 @@
-package com.icesi.client.ui;
+package ui;
 
 import java.util.Scanner;
 

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,8 +23,9 @@ public class QueryService {
         this.primeFactorizer = primeFactorizer;
     }
 
-    public void queryWithCache(List<Integer> citizenIds) {
+    private List<String> queryWithCache(List<String> citizenIds) {
         String query = "SELECT id, documento, nombre, apellido, mesa_id FROM ciudadano WHERE documento IN (%s);";
+        List<String> response = new ArrayList<>();
 
         String placeholders = citizenIds.stream()
                 .map(id -> "?")
@@ -32,10 +34,9 @@ public class QueryService {
 
         try (PreparedStatement statement = dbConnection.prepareStatement(query)) {
             for (int i = 0; i < citizenIds.size(); i++) {
-                statement.setString(i + 1, String.valueOf(citizenIds.get(i))); // Convertir IDs a cadenas
+                statement.setString(i + 1, citizenIds.get(i));
             }
 
-            long start = System.currentTimeMillis();
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String documento = resultSet.getString("documento");
@@ -45,18 +46,18 @@ public class QueryService {
                 String mesaInfo = cacheLoader.getCacheValue(mesaId);
                 List<Long> primeFactors = primeFactorizer.getPrimeFactors(Long.parseLong(documento));
 
-                System.out.printf(
+                response.add(String.format(
                         "Documento: %s, Nombre: %s, Apellido: %s, Mesa Información: %s%n, Factores primos: %s%n",
-                        documento, nombre, apellido, mesaInfo, primeFactors);
+                        documento, nombre, apellido, mesaInfo, primeFactors));
             }
-            long end = System.currentTimeMillis();
-            System.out.println("Time elapsed (with cache): " + (end - start) + "ms");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return response;
     }
 
-    public void queryWithoutCache(List<Integer> citizenIds) {
+    private List<String> queryWithoutCache(List<String> citizenIds) {
         String query = "SELECT " +
                 "c.id AS ciudadano_id, " +
                 "c.documento AS ciudadano_documento, " +
@@ -73,6 +74,7 @@ public class QueryService {
                 "JOIN municipio m ON pv.municipio_id = m.id " +
                 "JOIN departamento d ON m.departamento_id = d.id " +
                 "WHERE c.documento IN (%s);";
+        List<String> response = new ArrayList<>();
 
         String placeholders = citizenIds.stream()
                 .map(id -> "?")
@@ -81,10 +83,9 @@ public class QueryService {
 
         try (PreparedStatement statement = dbConnection.prepareStatement(query)) {
             for (int i = 0; i < citizenIds.size(); i++) {
-                statement.setString(i + 1, String.valueOf(citizenIds.get(i))); // Convertir IDs a cadenas
+                statement.setString(i + 1, citizenIds.get(i));
             }
 
-            long start = System.currentTimeMillis();
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String documento = resultSet.getString("ciudadano_documento");
@@ -96,14 +97,28 @@ public class QueryService {
                         resultSet.getString("puesto_votacion_direccion"));
                 List<Long> primeFactors = primeFactorizer.getPrimeFactors(Long.parseLong(documento));
 
-                System.out.printf(
+                response.add(String.format(
                         "Documento: %s, Nombre: %s, Apellido: %s, Mesa Información: %s%n, Factores primos: %s%n",
-                        documento, nombre, apellido, mesaInfo, primeFactors);
+                        documento, nombre, apellido, mesaInfo, primeFactors));
             }
-            long end = System.currentTimeMillis();
-            System.out.println("Time elapsed (without cache): " + (end - start) + "ms");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return response;
+    }
+
+    public String querySingleDocument(String document) {
+        List<String> citizenDocuments = List.of(document);
+        List<String> response = queryWithCache(citizenDocuments);
+        if (!response.isEmpty()) {
+            return response.get(0);
+        }
+        return null;
+    }
+
+    public List<String> queryMultipleDocuments(List<String> documents) {
+        List<String> response = queryWithCache(documents);
+        return response;
     }
 }

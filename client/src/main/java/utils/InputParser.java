@@ -1,7 +1,8 @@
-package com.icesi.client.utils;
+package utils;
 
 /**
- * Utility class for parsing input to identify its type (ID, thread number, or file path).
+ * Utility class for parsing input to identify its type (ID, thread number, or
+ * file path).
  */
 public class InputParser {
 

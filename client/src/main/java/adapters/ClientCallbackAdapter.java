@@ -1,15 +1,15 @@
-package com.icesi.client.adapters;
+package adapters;
 
-import ClientIce.Callback;
+import ClientIce.ClientCallback;
 import ClientIce.IndividualResponse;
 import ClientIce.MultipleResponse;
 import com.zeroc.Ice.Current;
 
 import java.io.IOException;
 
-import static com.icesi.client.utils.ClientUtils.generateConsolidatedLog;
+import static utils.ClientUtils.generateConsolidatedLog;
 
-public class ClientCallbackAdapter implements Callback {
+public class ClientCallbackAdapter implements ClientCallback {
 
     private static long responses = 0L;
 
@@ -22,7 +22,7 @@ public class ClientCallbackAdapter implements Callback {
     public void sendMultipleResponse(MultipleResponse r, Current current) {
         System.out.println("Respuesta del server: " + r.responseTime);
         try {
-            generateConsolidatedLog(r.values, "Logs-"+responses+".csv");
+            generateConsolidatedLog(r.values, "Logs-" + responses + ".txt");
             responses++;
         } catch (IOException e) {
             e.printStackTrace();

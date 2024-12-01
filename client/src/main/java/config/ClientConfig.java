@@ -1,4 +1,4 @@
-package com.icesi.client.config;
+package config;
 
 import com.zeroc.Ice.Communicator;
 import com.zeroc.Ice.ObjectAdapter;
