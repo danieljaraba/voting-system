@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import concurrency.MasterWorkerProcessor;
 import config.ClientResolverConfig;
 import controllers.ClientResolverI;
 import database.DatabaseConfig;
