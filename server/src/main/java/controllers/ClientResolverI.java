@@ -37,14 +37,14 @@ public class ClientResolverI implements ClientResolver {
 
     @Override
     public void sendFile(String[] list, ClientCallbackPrx client, Current current) {
-        Long startAt = System.currentTimeMillis();
-
-        List<String> results = masterWorkerProcessor.processFile(List.of(list));
-
-        Long endAt = System.currentTimeMillis();
-        String[] responseArray = results.toArray(new String[0]);
-        MultipleResponse multipleResponse = new MultipleResponse(endAt - startAt, responseArray);
-        client.sendMultipleResponse(multipleResponse);
+        threadPool.execute(() -> {
+            Long startAt = System.currentTimeMillis();
+            List<String> results = masterWorkerProcessor.processFile(List.of(list));
+            Long endAt = System.currentTimeMillis();
+            String[] responseArray = results.toArray(new String[0]);
+            MultipleResponse multipleResponse = new MultipleResponse(endAt - startAt, responseArray);
+            client.sendMultipleResponse(multipleResponse);
+        });
     }
 
     @Override
