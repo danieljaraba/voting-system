@@ -3,6 +3,7 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.zeroc.Ice.Current;
@@ -20,11 +21,13 @@ public class ClientResolverI implements ClientResolver {
 
     private final QueryService queryService;
     private final ThreadPool threadPool;
-    private final int chunkSize = 1000;
+    private final int chunkSize = 1250;
+    private final ConcurrentHashMap<String, BlockingQueue<String>> clientBuffers;
 
     public ClientResolverI(QueryService queryService, ThreadPool threadPool) {
         this.queryService = queryService;
         this.threadPool = threadPool;
+        this.clientBuffers = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -39,67 +42,48 @@ public class ClientResolverI implements ClientResolver {
     }
 
     @Override
-    public void sendFile(String[] list, ClientCallbackPrx client, Current current) {
+    public void sendFile(String[] list, ClientCallbackPrx client, boolean isLast, Current current) {
         threadPool.execute(() -> {
-            String[] responseArray = new String[0];
-            Long startAt = System.currentTimeMillis();
-            Long endAt;
-            if (list.length > chunkSize) {
-                List<List<String>> chunks = createChunks(List.of(list), chunkSize);
-                BlockingQueue<List<String>> resultQueue = new LinkedBlockingQueue<>();
+            String clientId = client.ice_getIdentity().name; // Identifica al cliente único
+            clientBuffers.putIfAbsent(clientId, new LinkedBlockingQueue<>()); // Crea un buffer si no existe
+            BlockingQueue<String> buffer = clientBuffers.get(clientId);
 
-                List<String> masterChunk = null;
-                if (!chunks.isEmpty()) {
-                    masterChunk = chunks.remove(0); // Reserve the first chunk for the master
+            try {
+                // Agrega los datos al buffer del cliente
+                for (String item : list) {
+                    buffer.put(item);
                 }
 
-                for (List<String> chunk : chunks) {
-                    threadPool.execute(() -> {
-                        try {
-                            List<String> result = queryService.queryMultipleDocuments(chunk);
-                            resultQueue.put(result);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            try {
-                                resultQueue.put(new ArrayList<>());
-                            } catch (InterruptedException ex) {
-                                Thread.currentThread().interrupt();
-                            }
-                        }
-                    });
+                // Si es el último chunk, procesa el buffer completo
+                if (isLast) {
+                    processFile(clientId, client);
                 }
 
-                List<String> masterResults = new ArrayList<>();
-                if (masterChunk != null) {
-                    masterResults = queryService.queryMultipleDocuments(masterChunk);
-                }
-
-                List<String> combinedResults = new ArrayList<>(masterResults);
-                for (int i = 0; i < chunks.size(); i++) {
-                    try {
-                        combinedResults.addAll(resultQueue.take());
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        e.printStackTrace();
-                    }
-                }
-
-                endAt = System.currentTimeMillis();
-                responseArray = combinedResults.toArray(new String[0]);
-
-            } else {
-                List<String> response = queryService.queryMultipleDocuments(List.of(list));
-                endAt = System.currentTimeMillis();
-                responseArray = response.toArray(new String[response.size()]);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
             }
-            MultipleResponse multipleResponse = new MultipleResponse(endAt - startAt, responseArray);
-            client.sendMultipleResponse(multipleResponse);
         });
     }
 
     @Override
     public void setThreadNumber(int threadCount, ClientCallbackPrx client, Current current) {
         threadPool.setNumberOfThreads(threadCount);
+    }
+
+    private void processFile(String clientId, ClientCallbackPrx client) {
+        threadPool.execute(() -> {
+            Long startAt = System.currentTimeMillis();
+            String[] list = clientBuffers.get(clientId).toArray(new String[0]);
+            if (list.length == 0) {
+                return;
+            }
+            List<String> responseList = queryService.queryMultipleDocuments(List.of(list));
+            String[] responseArray = responseList.toArray(new String[0]);
+            Long endAt = System.currentTimeMillis();
+            MultipleResponse multipleResponse = new MultipleResponse(endAt - startAt, responseArray);
+            client.sendMultipleResponse(multipleResponse);
+        });
     }
 
 }

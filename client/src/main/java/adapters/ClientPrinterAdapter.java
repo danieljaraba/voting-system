@@ -8,6 +8,7 @@ import ClientIce.ClientResolverPrx;
 
 public class ClientPrinterAdapter {
     private final ClientResolverPrx service;
+    private final static int MAX_SIZE_FILE = 1000;
 
     public ClientPrinterAdapter(Communicator communicator) {
         this.service = ClientResolverPrx.checkedCast(communicator.propertyToProxy("ClientResolver.Proxy"));
@@ -28,7 +29,19 @@ public class ClientPrinterAdapter {
     }
 
     public void sendFile(String[] list, ClientCallbackPrx callbackPrx) {
-        service.sendFile(list, callbackPrx);
+        if (list.length > MAX_SIZE_FILE) {
+            for (int i = 0; i < list.length; i += MAX_SIZE_FILE) {
+                String[] chunk = new String[Math.min(MAX_SIZE_FILE, list.length - i)];
+                System.arraycopy(list, i, chunk, 0, chunk.length);
+                if (i + MAX_SIZE_FILE < list.length) {
+                    service.sendFile(chunk, callbackPrx, false);
+                } else {
+                    service.sendFile(chunk, callbackPrx, true);
+                }
+            }
+        } else {
+            service.sendFile(list, callbackPrx, true);
+        }
     }
 
     public void setThreadNumber(int threadCount, ClientCallbackPrx callbackPrx) {

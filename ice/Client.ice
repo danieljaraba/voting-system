@@ -21,7 +21,7 @@ module ClientIce
     interface ClientResolver
     {
         void sendId(string id, ClientCallback* client);
-        void sendFile(ResponseList list, ClientCallback* client);
+        void sendFile(ResponseList list, ClientCallback* client, bool isLast);
         void setThreadNumber(int threadCount, ClientCallback* client);
     }
 }

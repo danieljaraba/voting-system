@@ -6,6 +6,7 @@
  */
 
  plugins {
+    id 'java'
     id 'com.zeroc.gradle.ice-builder.slice' version '1.4.7' apply false
  }
 
@@ -25,16 +26,17 @@ def isWindows = System.getProperty('os.name').toLowerCase().contains('win')
         implementation 'org.postgresql:postgresql:42.6.0'
         implementation 'org.slf4j:slf4j-simple:1.7.30'
     }
-     slice {
-         //iceHome = 'C:/Program Files/ZeroC/Ice-3.7.10'
-         iceHome = isWindows ? 'C:/Program Files/ZeroC/Ice-3.7.10' : '/opt/homebrew/Cellar/ice/3.7.10'
-         java {
-             files = [
-                     // file('../Printer.ice')
-                     file('../ice/Client.ice')
-             ]
-         }
-     }
+
+    slice {
+        //iceHome = 'C:/Program Files/ZeroC/Ice-3.7.10'
+        iceHome = isWindows ? 'C:/Program Files/ZeroC/Ice-3.7.10' : '/opt/homebrew/Cellar/ice/3.7.10'
+        java {
+            files = [
+                    // file('../Printer.ice')
+                    file('../ice/Client.ice')
+            ]
+        }
+    }
 
     jar {
         manifest {
@@ -43,6 +45,9 @@ def isWindows = System.getProperty('os.name').toLowerCase().contains('win')
                 //'Class-Path': '/opt/Ice-3.7.6/lib/ice-3.7.6.jar'
                 'Class-Path': configurations.runtimeClasspath.resolve().collect { it.toURI() }.join(' ')
             )
+        }
+        from {
+            configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
         }
     }
  }

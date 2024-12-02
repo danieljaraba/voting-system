@@ -1,1 +1,4 @@
 ClientResolver.Endpoints=default -h localhost -p 9099
+
+Ice.MessageSizeMax=20480
+Ice.Override.Timeout=60000

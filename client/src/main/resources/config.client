@@ -2,3 +2,6 @@ ClientResolver.Proxy=ClientResolver:tcp -p 9099
 ClientCallback.Endpoints=default -h localhost
 
 Ice.Default.Host=localhost
+
+Ice.MessageSizeMax=20480
+Ice.Override.Timeout=60000
