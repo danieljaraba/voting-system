@@ -18,7 +18,7 @@ public class PoolWorker extends Thread {
                     try {
                         taskQueue.wait();
                     } catch (InterruptedException e) {
-                        System.out.println("An error occurred while waiting for a task.");
+                        System.out.println("A thread was closed.");
                     }
                 }
                 task = taskQueue.poll();

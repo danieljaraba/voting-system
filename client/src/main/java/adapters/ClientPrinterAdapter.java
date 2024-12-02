@@ -29,19 +29,7 @@ public class ClientPrinterAdapter {
     }
 
     public void sendFile(String[] list, ClientCallbackPrx callbackPrx) {
-        if (list.length > MAX_SIZE_FILE) {
-            for (int i = 0; i < list.length; i += MAX_SIZE_FILE) {
-                String[] chunk = new String[Math.min(MAX_SIZE_FILE, list.length - i)];
-                System.arraycopy(list, i, chunk, 0, chunk.length);
-                if (i + MAX_SIZE_FILE < list.length) {
-                    service.sendFile(chunk, callbackPrx, false);
-                } else {
-                    service.sendFile(chunk, callbackPrx, true);
-                }
-            }
-        } else {
-            service.sendFile(list, callbackPrx, true);
-        }
+        service.sendFile(list, callbackPrx);
     }
 
     public void setThreadNumber(int threadCount, ClientCallbackPrx callbackPrx) {
