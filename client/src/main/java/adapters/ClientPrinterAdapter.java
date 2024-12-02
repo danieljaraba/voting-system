@@ -35,4 +35,8 @@ public class ClientPrinterAdapter {
     public void setThreadNumber(int threadCount, ClientCallbackPrx callbackPrx) {
         service.setThreadNumber(threadCount, callbackPrx);
     }
+
+    public void setChunkSize(int chunkSize, ClientCallbackPrx callbackPrx) {
+        service.setChunkSize(chunkSize, callbackPrx);
+    }
 }

@@ -23,5 +23,6 @@ module ClientIce
         void sendId(string id, ClientCallback* client);
         void sendFile(ResponseList list, ClientCallback* client);
         void setThreadNumber(int threadCount, ClientCallback* client);
+        void setChunkSize(int chunkSize, ClientCallback* client);
     }
 }

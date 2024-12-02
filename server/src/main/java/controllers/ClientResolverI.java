@@ -52,4 +52,8 @@ public class ClientResolverI implements ClientResolver {
         threadPool.setNumberOfThreads(threadCount);
     }
 
+    @Override
+    public void setChunkSize(int chunkSize, ClientCallbackPrx client, Current current) {
+        masterWorkerProcessor.setChunkSize(chunkSize);
+    }
 }

@@ -16,7 +16,7 @@ public class MasterWorkerProcessor {
 
     private final QueryService queryService;
     private final ThreadPool threadPool;
-    private final int chunkSize;
+    private int chunkSize;
 
     /**
      * Constructs a MasterWorkerProcessor.
@@ -79,5 +79,12 @@ public class MasterWorkerProcessor {
         }
 
         return combinedResults;
+    }
+
+    public void setChunkSize(int chunkSize) {
+        if (chunkSize <= 0) {
+            throw new IllegalArgumentException("Chunk size must be greater than zero.");
+        }
+        this.chunkSize = chunkSize;
     }
 }

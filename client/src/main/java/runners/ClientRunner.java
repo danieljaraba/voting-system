@@ -57,6 +57,9 @@ public class ClientRunner {
             } else if (InputParser.isFilePath(input)) {
                 List<String> ids = ClientUtils.readIdsFromFile(input);
                 serviceManager.sendFile(ids.toArray(new String[0]), callbackPrx);
+            } else if (InputParser.isChunkSize(input)) {
+                int chunkSize = Integer.parseInt(input.substring(1));
+                serviceManager.setChunkSize(chunkSize, callbackPrx);
             } else {
                 System.out.println("Invalid input. Please enter a valid ID, file path, or thread number (e.g., N5).");
             }

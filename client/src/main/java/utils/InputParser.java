@@ -35,4 +35,8 @@ public class InputParser {
     public static boolean isFilePath(String input) {
         return input.endsWith(".txt");
     }
+
+    public static boolean isChunkSize(String input) {
+        return input.matches("C\\d+"); // Starts with 'C' followed by digits
+    }
 }
