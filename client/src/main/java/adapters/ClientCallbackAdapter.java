@@ -8,10 +8,9 @@ import com.zeroc.Ice.Current;
 import java.io.IOException;
 
 import static utils.ClientUtils.generateConsolidatedLog;
+import static utils.ClientUtils.getFormattedDate;
 
 public class ClientCallbackAdapter implements ClientCallback {
-
-    private static long responses = 0L;
 
     @Override
     public void sendIndividualResponse(IndividualResponse r, Current current) {
@@ -22,8 +21,7 @@ public class ClientCallbackAdapter implements ClientCallback {
     public void sendMultipleResponse(MultipleResponse r, Current current) {
         System.out.println("Respuesta del server: " + r.responseTime);
         try {
-            generateConsolidatedLog(r.values, "Logs-" + responses + ".txt");
-            responses++;
+            generateConsolidatedLog(r.values, "Logs-" + getFormattedDate() + ".txt");
         } catch (IOException e) {
             e.printStackTrace();
         }

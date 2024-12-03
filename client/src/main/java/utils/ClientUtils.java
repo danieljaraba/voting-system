@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,5 +42,16 @@ public class ClientUtils {
                 writer.write(input);
             }
         }
+    }
+
+    /**
+     * Generates a formatted date string for logging purposes.
+     *
+     * @return A formatted date string.
+     */
+    public static String getFormattedDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        Date date = new Date();
+        return formatter.format(date);
     }
 }
