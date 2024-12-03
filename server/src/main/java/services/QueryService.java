@@ -45,10 +45,12 @@ public class QueryService {
                 int mesaId = resultSet.getInt("mesa_id");
                 String mesaInfo = cacheLoader.getCacheValue(mesaId);
                 List<Long> primeFactors = primeFactorizer.getPrimeFactors(Long.parseLong(documento));
+                Long primeFactorsSize = (long) primeFactors.size();
+                int isPrime = primeFactorizer.getPrimeFactors(primeFactorsSize).size() == 0 ? 0 : 1;
 
                 response.add(String.format(
                         "Documento: %s, Nombre: %s, Apellido: %s, Mesa Información: %s%n, Factores primos: %s%n",
-                        documento, nombre, apellido, mesaInfo, primeFactors));
+                        documento, nombre, apellido, mesaInfo, isPrime));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,18 +90,18 @@ public class QueryService {
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                String documento = resultSet.getString("ciudadano_documento");
-                String nombre = resultSet.getString("ciudadano_nombre");
-                String apellido = resultSet.getString("ciudadano_apellido");
-                String mesaInfo = String.format("Municipio: %s, Departamento: %s, Puesto: %s, Dirección: %s",
-                        resultSet.getString("municipio_nombre"), resultSet.getString("departamento_nombre"),
-                        resultSet.getString("puesto_votacion_nombre"),
-                        resultSet.getString("puesto_votacion_direccion"));
+                String documento = resultSet.getString("documento");
+                String nombre = resultSet.getString("nombre");
+                String apellido = resultSet.getString("apellido");
+                int mesaId = resultSet.getInt("mesa_id");
+                String mesaInfo = cacheLoader.getCacheValue(mesaId);
                 List<Long> primeFactors = primeFactorizer.getPrimeFactors(Long.parseLong(documento));
+                Long primeFactorsSize = (long) primeFactors.size();
+                int isPrime = primeFactorizer.getPrimeFactors(primeFactorsSize).size() == 0 ? 0 : 1;
 
                 response.add(String.format(
                         "Documento: %s, Nombre: %s, Apellido: %s, Mesa Información: %s%n, Factores primos: %s%n",
-                        documento, nombre, apellido, mesaInfo, primeFactors));
+                        documento, nombre, apellido, mesaInfo, isPrime));
             }
         } catch (SQLException e) {
             e.printStackTrace();
