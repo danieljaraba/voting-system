@@ -25,14 +25,17 @@ public class ClientResolverI implements ClientResolver {
     private final MasterWorkerDistributed masterWorkerDistributed;
 
     public ClientResolverI(QueryService queryService,
-            ThreadPool threadPool,
-            MasterPrinterAdapter masterPrinterAdapter,
-            MasterCallbackPrx masterCallbackPrx, MasterCallbackAdapter masterCallbackAdapter) {
+            MasterPrinterAdapter masterPrinterAdapter, MasterCallbackPrx masterCallbackPrx,
+            MasterCallbackAdapter masterCallbackAdapter,
+            ThreadPool threadPool) {
+        // MasterPrinterAdapter masterPrinterAdapter,
+        // MasterCallbackPrx masterCallbackPrx, MasterCallbackAdapter
+        // masterCallbackAdapter
         this.queryService = queryService;
         this.threadPool = threadPool;
-        this.masterWorkerProcessor = new MasterWorkerProcessor(queryService, threadPool, 10000, masterPrinterAdapter,
-                masterCallbackPrx);
-        this.masterWorkerDistributed = new MasterWorkerDistributed(10000, masterPrinterAdapter, masterCallbackPrx);
+        this.masterWorkerProcessor = new MasterWorkerProcessor(queryService, threadPool, 10000);
+        this.masterWorkerDistributed = new MasterWorkerDistributed(10000,
+                masterPrinterAdapter, masterCallbackPrx);
         masterCallbackAdapter.setMasterWorkerDistributed(masterWorkerDistributed);
     }
 

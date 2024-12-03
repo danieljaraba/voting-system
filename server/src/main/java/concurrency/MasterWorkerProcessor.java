@@ -29,9 +29,7 @@ public class MasterWorkerProcessor {
      */
     public MasterWorkerProcessor(QueryService queryService,
             ThreadPool threadPool,
-            int chunkSize,
-            MasterPrinterAdapter masterPrinterAdapter,
-            MasterCallbackPrx masterCallbackPrx) {
+            int chunkSize) {
         this.queryService = queryService;
         this.threadPool = threadPool;
         this.chunkSize = chunkSize;

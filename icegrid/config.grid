@@ -1,6 +1,6 @@
-IceGrid.Registry.Client.Endpoints=default -h xhgrid4 -p 4061
-IceGrid.Registry.Server.Endpoints=default -h xhgrid4
-IceGrid.Registry.Internal.Endpoints=default -h xhgrid4
+IceGrid.Registry.Client.Endpoints=default -h localhost -p 4061
+IceGrid.Registry.Server.Endpoints=default -h localhost
+IceGrid.Registry.Internal.Endpoints=default -h localhost
 IceGrid.Registry.AdminPermissionsVerifier=IceGrid/NullPermissionsVerifier
 
 IceGrid.Registry.LMDB.Path=db/registry

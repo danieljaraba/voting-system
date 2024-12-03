@@ -37,6 +37,7 @@ public class MasterResolverI implements MasterResolver {
 
     @Override
     public void sendFile(String[] list, MasterCallbackPrx client, String taskId, Current current) {
+        System.out.println("Processing file with " + list.length + " lines");
         threadPool.execute(() -> {
             Long startAt = System.currentTimeMillis();
             List<String> results = masterWorkerProcessor.processFile(List.of(list));

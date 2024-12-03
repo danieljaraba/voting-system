@@ -4,8 +4,11 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import ServerIce.MasterCallback;
+import com.zeroc.Ice.Communicator;
+import com.zeroc.Ice.Util;
+
 import ServerIce.MasterCallbackPrx;
+import ServerIce.MasterResolverPrx;
 import adapter.MasterCallbackAdapter;
 import adapter.MasterPrinterAdapter;
 import config.ClientResolverConfig;
@@ -16,7 +19,6 @@ import utils.CacheLoader;
 import utils.PrimeFactorizer;
 
 import ClientIce.ClientResolver;
-import concurrency.MasterWorkerDistributed;
 import concurrency.ThreadPool;
 
 public class Server {
@@ -41,14 +43,29 @@ public class Server {
         }
 
         if (dbConnection != null && cacheLoader != null && primeFactorizer != null) {
-            QueryService queryManager = new QueryService(dbConnection, cacheLoader, primeFactorizer);
-            MasterPrinterAdapter masterPrinterAdapter = ClientResolverConfig.getMasterPrinterAdapter(args);
-            MasterCallbackAdapter masterCallback = new MasterCallbackAdapter();
-            MasterCallbackPrx masterCallbackPrx = ClientResolverConfig.getMasterCallbackPrx(args, masterPrinterAdapter,
-                    masterCallback);
-            ClientResolver clientResolver = new ClientResolverI(queryManager, threadPool, masterPrinterAdapter,
-                    masterCallbackPrx, masterCallback);
-            ClientResolverConfig.initializeClientResolverAdapter(args, extraArgs, clientResolver);
+            Communicator communicator = null;
+            try {
+                communicator = Util.initialize(args);
+                QueryService queryManager = new QueryService(dbConnection, cacheLoader, primeFactorizer);
+                MasterResolverPrx masterResolverPrx = ClientResolverConfig.initializeMasterResolverPrx(communicator,
+                        extraArgs);
+                MasterPrinterAdapter masterPrinterAdapter = new MasterPrinterAdapter(masterResolverPrx);
+                MasterCallbackAdapter masterCallback = new MasterCallbackAdapter();
+                MasterCallbackPrx masterCallbackPrx = ClientResolverConfig.initializeMasterCallbackPrx(communicator,
+                        extraArgs,
+                        masterCallback);
+                ClientResolver clientResolver = new ClientResolverI(queryManager, masterPrinterAdapter,
+                        masterCallbackPrx,
+                        masterCallback, threadPool);
+                ClientResolverConfig.initializeClientResolverAdapter(communicator, extraArgs, clientResolver);
+                communicator.waitForShutdown();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (communicator != null) {
+                    communicator.destroy();
+                }
+            }
         }
     }
 }

@@ -1,20 +1,20 @@
 <icegrid>
     <application name="Server">
-        <node name="server1">
-            <server id="server1" exe="java" activation="on-demand">
+        <node name="server2">
+            <server id="server2" exe="java" activation="on-demand">
                 <option>-DIce.ThreadPool.Size=16</option>
                 <option>-jar</option>
-                <option>./server.jar</option>
+                <option>server.jar</option>
                 <properties>
                     <property name="Ice.MessageSizeMax" value="1000000000" />
                     <property name="Ice.ThreadPool.Server.Size" value="2"/>
                     <property name="Ice.ThreadPool.Server.StackSize" value="65536"/>
-                    <property name="MasterCallback.Endpoints" value="default -h xhgrid7"/>
+                    <property name="MasterCallback.Endpoints" value="default -h xhgrid9"/>
                 </properties>
-                <adapter name="ClientResolver" endpoints="tcp -h xhgrid7">
+                <adapter name="ClientResolver" endpoints="tcp -h xhgrid9">
                     <object identity="clientResolver1" type="::ClientIce::ClientResolver" property="identity" />
                 </adapter>
-                <adapter name="MasterCallback" endpoints="tcp -h xhgrid7">
+                <adapter name="MasterCallback" endpoints="tcp -h xhgrid9">
                     <object identity="masterCallback1" type="::ServerIce::MasterCallback" property="identity" />
                 </adapter>
             </server>
