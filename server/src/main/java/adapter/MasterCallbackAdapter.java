@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MasterCallbackAdapter implements MasterCallback {
 
-    private ConcurrentHashMap<String, Pair> responses = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, tuple> responses = new ConcurrentHashMap<>();
 
     @Override
     public void sendIndividualResponse(IndividualResponse r, Current current) {
