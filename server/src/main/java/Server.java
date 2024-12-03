@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import ServerIce.MasterCallbackPrx;
+import adapter.MasterPrinterAdapter;
 import concurrency.MasterWorkerProcessor;
 import config.ClientResolverConfig;
 import controllers.ClientResolverI;
@@ -38,7 +40,10 @@ public class Server {
 
         if (dbConnection != null && cacheLoader != null && primeFactorizer != null) {
             QueryService queryManager = new QueryService(dbConnection, cacheLoader, primeFactorizer);
-            ClientResolver clientResolver = new ClientResolverI(queryManager, threadPool);
+            MasterPrinterAdapter masterPrinterAdapter = ClientResolverConfig.getMasterPrinterAdapter(args);
+            MasterCallbackPrx masterCallbackPrx = ClientResolverConfig.getMasterCallbackPrx(args);
+            ClientResolver clientResolver =
+                    new ClientResolverI(queryManager, threadPool, masterPrinterAdapter, masterCallbackPrx);
             ClientResolverConfig.initializeClientResolverAdapter(args, extraArgs, clientResolver);
         }
     }

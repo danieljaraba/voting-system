@@ -2,6 +2,8 @@ package controllers;
 
 import java.util.List;
 
+import ServerIce.MasterCallbackPrx;
+import adapter.MasterPrinterAdapter;
 import com.zeroc.Ice.Current;
 
 import ClientIce.ClientCallbackPrx;
@@ -18,10 +20,14 @@ public class ClientResolverI implements ClientResolver {
     private final ThreadPool threadPool;
     private final MasterWorkerProcessor masterWorkerProcessor;
 
-    public ClientResolverI(QueryService queryService, ThreadPool threadPool) {
+    public ClientResolverI(QueryService queryService,
+                           ThreadPool threadPool,
+                           MasterPrinterAdapter masterPrinterAdapter,
+                           MasterCallbackPrx masterCallbackPrx) {
         this.queryService = queryService;
         this.threadPool = threadPool;
-        this.masterWorkerProcessor = new MasterWorkerProcessor(queryService, threadPool, 10000);
+        this.masterWorkerProcessor =
+                new MasterWorkerProcessor(queryService, threadPool, 10000, masterPrinterAdapter, masterCallbackPrx);
     }
 
     @Override

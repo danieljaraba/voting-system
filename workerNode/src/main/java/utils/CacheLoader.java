@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class CacheLoader {
 
-    private final Map<Integer, String> cache;
+    private Map<Integer, String> cache;
 
     public CacheLoader() throws IOException {
         cache = new HashMap<>();

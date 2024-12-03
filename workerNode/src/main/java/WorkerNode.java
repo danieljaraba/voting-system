@@ -1,8 +1,13 @@
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import ClientIce.ClientResolver;
+import concurrency.ThreadPool;
+import config.MasterResolverConfig;
+import controllers.MasterResolverI;
 import database.DatabaseConfig;
 import services.QueryService;
 import utils.CacheLoader;
@@ -10,15 +15,18 @@ import utils.PrimeFactorizer;
 
 public class WorkerNode {
     public static void main(String[] args) {
+        List<String> extraArgs = new ArrayList<>();
+
         DataSource dataSource = DatabaseConfig.getDataSource();
         Connection dbConnection;
         CacheLoader cacheLoader;
         PrimeFactorizer primeFactorizer;
+        ThreadPool threadPool = new ThreadPool(10);
         try {
             cacheLoader = new CacheLoader();
             primeFactorizer = new PrimeFactorizer();
             dbConnection = dataSource.getConnection();
-            System.out.println("Connected to the database");
+            System.out.println("Worker Connected to the database");
         } catch (Exception e) {
             dbConnection = null;
             cacheLoader = null;
@@ -28,10 +36,8 @@ public class WorkerNode {
 
         if (dbConnection != null && cacheLoader != null && primeFactorizer != null) {
             QueryService queryManager = new QueryService(dbConnection, cacheLoader, primeFactorizer);
-            List<Integer> citizenIds = List.of(603308456, 620074463, 951646451, 421554480, 876515646,
-                    482220811, 323290590, 76325522, 757113463, 601107656);
-            queryManager.queryWithCache(citizenIds);
-            queryManager.queryWithoutCache(citizenIds);
+            MasterResolverI masterResolverI = new MasterResolverI(queryManager, threadPool);
+            MasterResolverConfig.initializeClientResolverAdapter(args, extraArgs, masterResolverI);
         }
     }
 }

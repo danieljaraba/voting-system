@@ -32,8 +32,8 @@ def isWindows = System.getProperty('os.name').toLowerCase().contains('win')
         iceHome = isWindows ? 'C:/Program Files/ZeroC/Ice-3.7.10' : '/opt/homebrew/Cellar/ice/3.7.10'
         java {
             files = [
-                    // file('../Printer.ice')
-                    file('../ice/Client.ice')
+                    file('../ice/Client.ice'),
+                    file('../ice/Master.ice')
             ]
         }
     }
