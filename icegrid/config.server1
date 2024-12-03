@@ -1,0 +1,5 @@
+Ice.Default.Locator=IceGrid/Locator: default -h localhost -p 4061
+
+IceGrid.Node.Endpoints=default -h localhost
+IceGrid.Node.Name=server1
+IceGrid.Node.Data=db/server1

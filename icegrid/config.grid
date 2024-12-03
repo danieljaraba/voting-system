@@ -1,0 +1,7 @@
+IceGrid.Registry.Client.Endpoints=default -h localhost -p 4061
+IceGrid.Registry.Server.Endpoints=default -h localhost
+IceGrid.Registry.Internal.Endpoints=default -h localhost
+IceGrid.Registry.AdminPermissionsVerifier=IceGrid/NullPermissionsVerifier
+
+IceGrid.Registry.LMDB.Path=db/registry
+IceGrid.Registry.Discovery.Interface=127.0.0.1

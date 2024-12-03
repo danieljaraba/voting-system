@@ -3,15 +3,17 @@ package adapters;
 import com.zeroc.Ice.Communicator;
 import com.zeroc.Ice.ObjectAdapter;
 import com.zeroc.Ice.ObjectPrx;
+import com.zeroc.IceGrid.QueryPrx;
 import ClientIce.ClientCallbackPrx;
 import ClientIce.ClientResolverPrx;
 
 public class ClientPrinterAdapter {
     private final ClientResolverPrx service;
-    private final static int MAX_SIZE_FILE = 1000;
 
     public ClientPrinterAdapter(Communicator communicator) {
-        this.service = ClientResolverPrx.checkedCast(communicator.propertyToProxy("ClientResolver.Proxy"));
+        QueryPrx query = QueryPrx.checkedCast(communicator.stringToProxy("IceGrid/Query"));
+        this.service = ClientResolverPrx
+                .checkedCast(query.findObjectByType("::ClientIce::ClientResolver"));
         if (this.service == null) {
             throw new Error("Invalid proxy");
         }

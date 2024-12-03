@@ -1,0 +1,22 @@
+<icegrid>
+    <application name="Server">
+        <node name="server1">
+            <server id="server1" exe="java" activation="on-demand">
+                <option>-DIce.ThreadPool.Size=16</option>
+                <option>-jar</option>
+                <option>./server.jar</option>
+                <properties>
+                    <property name="Ice.MessageSizeMax" value="1000000000" />
+                    <property name="Ice.Default.ConnectionTimeout" value="60000" />
+                    <property name="Ice.Default.ReadTimeout" value="60000" />
+                    <property name="Ice.Default.WriteTimeout" value="60000" /> 
+                    <property name="Ice.ThreadPool.Server.Size" value="2"/>
+                    <property name="Ice.ThreadPool.Server.StackSize" value="65536"/>
+                </properties>
+                <adapter name="ClientResolver" endpoints="tcp -h xhgrid3">
+                    <object identity="clientResolver1" type="::ClientIce::ClientResolver" property="identity" />
+                </adapter>
+            </server>
+        </node>
+    </application>
+</icegrid>

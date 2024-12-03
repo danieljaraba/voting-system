@@ -11,7 +11,7 @@ import ClientIce.ClientResolver;
 public class ClientResolverConfig {
     public static void initializeClientResolverAdapter(String[] args, List<String> extraArgs,
             ClientResolver clientResolver) {
-        try (Communicator communicator = Util.initialize(args, "config.server", extraArgs)) {
+        try (Communicator communicator = Util.initialize(args, extraArgs)) {
             if (!extraArgs.isEmpty()) {
                 System.err.println("too many arguments");
                 for (String v : extraArgs) {
@@ -20,7 +20,7 @@ public class ClientResolverConfig {
             }
 
             ObjectAdapter adapter = communicator.createObjectAdapter("ClientResolver");
-            adapter.add(clientResolver, Util.stringToIdentity("ClientResolver"));
+            adapter.add(clientResolver, Util.stringToIdentity("clientResolver1"));
             adapter.activate();
             communicator.waitForShutdown();
         }

@@ -22,6 +22,7 @@ def isWindows = System.getProperty('os.name').toLowerCase().contains('win')
 
     dependencies {
         implementation 'com.zeroc:ice:3.7.10'
+        implementation 'com.zeroc:icegrid:3.7.10'
         implementation 'com.zaxxer:HikariCP:5.0.1'
         implementation 'org.postgresql:postgresql:42.6.0'
         implementation 'org.slf4j:slf4j-simple:1.7.30'
