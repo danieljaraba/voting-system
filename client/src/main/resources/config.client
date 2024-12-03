@@ -3,4 +3,4 @@ ClientCallback.Endpoints=default -h xhgrid4
 Ice.MessageSizeMax=100000000
 Ice.Override.Timeout=60000
 
-Ice.Default.Locator=IceGrid/Locator:tcp -h xhgrid3 -p 4061
+Ice.Default.Locator=IceGrid/Locator:tcp -h xhgrid7 -p 4061

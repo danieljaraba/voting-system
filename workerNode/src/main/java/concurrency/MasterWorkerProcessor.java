@@ -1,7 +1,5 @@
 package concurrency;
 
-import ServerIce.MasterCallbackPrx;
-import adapter.MasterPrinterAdapter;
 import services.QueryService;
 
 import java.util.ArrayList;
@@ -27,11 +25,7 @@ public class MasterWorkerProcessor {
      * @param threadPool   The thread pool for managing worker threads.
      * @param chunkSize    The size of each chunk to be processed.
      */
-    public MasterWorkerProcessor(QueryService queryService,
-            ThreadPool threadPool,
-            int chunkSize,
-            MasterPrinterAdapter masterPrinterAdapter,
-            MasterCallbackPrx masterCallbackPrx) {
+    public MasterWorkerProcessor(QueryService queryService, ThreadPool threadPool, int chunkSize) {
         this.queryService = queryService;
         this.threadPool = threadPool;
         this.chunkSize = chunkSize;

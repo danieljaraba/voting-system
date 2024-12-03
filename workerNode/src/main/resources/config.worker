@@ -1,5 +1,3 @@
-MasterCallback.Endpoints=default -h xhgrid3
-
 Ice.MessageSizeMax=100000000
 Ice.Override.Timeout=60000
 

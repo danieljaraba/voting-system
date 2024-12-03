@@ -11,11 +11,19 @@ public class ClientPrinterAdapter {
     private final ClientResolverPrx service;
 
     public ClientPrinterAdapter(Communicator communicator) {
-        QueryPrx query = QueryPrx.checkedCast(communicator.stringToProxy("IceGrid/Query"));
-        this.service = ClientResolverPrx
-                .checkedCast(query.findObjectByType("::ClientIce::ClientResolver"));
-        if (this.service == null) {
-            throw new Error("Invalid proxy");
+        try {
+            QueryPrx query = QueryPrx.checkedCast(communicator.stringToProxy("IceGrid/Query"));
+            if (query == null) {
+                throw new Error("IceGrid/Query is not available");
+            }
+            System.out.println("Query: " + query);
+            this.service = ClientResolverPrx.checkedCast(query.findObjectByType("::ClientIce::ClientResolver"));
+            if (this.service == null) {
+                throw new Error("ClientResolver service not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Error("Failed to initialize ClientPrinterAdapter: " + e.getMessage());
         }
     }
 

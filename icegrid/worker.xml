@@ -1,0 +1,19 @@
+<icegrid>
+    <application name="WorkerNode">
+        <node name="worker1">
+            <server id="worker1" exe="java" activation="on-demand">
+                <option>-DIce.ThreadPool.Size=16</option>
+                <option>-jar</option>
+                <option>./workerNode.jar</option>
+                <properties>
+                    <property name="Ice.MessageSizeMax" value="1000000000" />
+                    <property name="Ice.ThreadPool.Server.Size" value="2"/>
+                    <property name="Ice.ThreadPool.Server.StackSize" value="65536"/>
+                </properties>
+                <adapter name="MasterResolver" endpoints="tcp -h xhgrid3">
+                    <object identity="masterResolver1" type="::ServerIce::MasterResolver" property="identity" />
+                </adapter>
+            </server>
+        </node>
+    </application>
+</icegrid>

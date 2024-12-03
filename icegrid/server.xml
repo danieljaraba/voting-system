@@ -7,14 +7,15 @@
                 <option>./server.jar</option>
                 <properties>
                     <property name="Ice.MessageSizeMax" value="1000000000" />
-                    <property name="Ice.Default.ConnectionTimeout" value="60000" />
-                    <property name="Ice.Default.ReadTimeout" value="60000" />
-                    <property name="Ice.Default.WriteTimeout" value="60000" /> 
                     <property name="Ice.ThreadPool.Server.Size" value="2"/>
                     <property name="Ice.ThreadPool.Server.StackSize" value="65536"/>
+                    <property name="MasterCallback.Endpoints" value="default -h xhgrid7"/>
                 </properties>
-                <adapter name="ClientResolver" endpoints="tcp -h xhgrid3">
+                <adapter name="ClientResolver" endpoints="tcp -h xhgrid7">
                     <object identity="clientResolver1" type="::ClientIce::ClientResolver" property="identity" />
+                </adapter>
+                <adapter name="MasterCallback" endpoints="tcp -h xhgrid7">
+                    <object identity="masterCallback1" type="::ServerIce::MasterCallback" property="identity" />
                 </adapter>
             </server>
         </node>
